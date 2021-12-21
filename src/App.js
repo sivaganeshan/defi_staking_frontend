@@ -1,24 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Header from "./components/Header";
+import { ThemeProvider } from "@mui/material";
+import { isDarkMode, lightModeTheme, darkModeTheme } from "./themes";
+import { useState } from "react";
+import TokenElement from "./components/TokenElement";
 
 function App() {
+  const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(isDarkMode());
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={isDarkModeEnabled ? darkModeTheme : lightModeTheme}>
+      <div className="App">
+        <Header
+          DarkMode={isDarkModeEnabled}
+          SetDarkMode={setIsDarkModeEnabled}
+        />
+        <TokenElement stakingDetails = {{tokenName:"ETHEREUM",tokenSymbol:"ETH", 
+        APR:"4.0%", stakedAmount:1.0, rewardsAccumulated:400, currentCycleRewards:100 }}/>
+
+        <TokenElement stakingDetails = {{tokenName:"RewardOne",tokenSymbol:"RONE", 
+        APR:"10.0%", stakedAmount:0, rewardsAccumulated:0, currentCycleRewards:0 }}/>
+      </div>
+    </ThemeProvider>
   );
 }
 
