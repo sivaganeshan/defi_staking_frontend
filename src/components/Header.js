@@ -15,8 +15,10 @@ export default function Header({ DarkMode, SetDarkMode }) {
     //if wallet
     if (window.ethereum) {
       setMetaMask(true);
+      connectWallet();
     } else if (window.web3) {
       setMetaMask(true);
+      connectWallet();
     } else {
       setMetaMask(false);
     }

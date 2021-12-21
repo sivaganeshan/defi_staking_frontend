@@ -1,6 +1,6 @@
 import "./App.css";
 import Header from "./components/Header";
-import { ThemeProvider } from "@mui/material";
+import { ThemeProvider, CssBaseline } from "@mui/material";
 import { isDarkMode, lightModeTheme, darkModeTheme } from "./themes";
 import { useState } from "react";
 import TokenElement from "./components/TokenElement";
@@ -10,6 +10,7 @@ function App() {
 
   return (
     <ThemeProvider theme={isDarkModeEnabled ? darkModeTheme : lightModeTheme}>
+      <CssBaseline />
       <div className="App">
         <Header
           DarkMode={isDarkModeEnabled}

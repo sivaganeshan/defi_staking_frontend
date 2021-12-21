@@ -13,7 +13,7 @@ import inrslogo from "../assest/inrs.png";
 export default function TokenElement({ stakingDetails }) {
   return (
     <>
-      <Paper elevation={3} style={{ marginTop: "0.2%"}}>
+      <Paper elevation={5} style={{ marginTop: "1%"}}>
         <Card sx={{}}>
           <CardContent>
             <Box
@@ -21,10 +21,10 @@ export default function TokenElement({ stakingDetails }) {
                 display: "grid",
                 gridAutoFlow: "column",
                 justifyContent: "space-around",
-                gridTemplateColumns: "1fr 1fr 1fr",
+                gridTemplateColumns: " 0.1fr 1fr 1fr",
               }}
             >
-              <div>
+              <div >
                 <Avatar component="span"
                   alt="logo"
                   src={
@@ -32,12 +32,12 @@ export default function TokenElement({ stakingDetails }) {
                   }
                 ></Avatar>
               </div>
-              <div>
+              <div >
                 <Typography variant="h6" component="span" color="primary">
                   {`${stakingDetails.tokenName} (${stakingDetails.tokenSymbol})`}
                 </Typography>
               </div>
-              <div>
+              <div >
                 <Typography variant="h6" component="span" color="primary">
                   {`APR : ${stakingDetails.APR}`}
                 </Typography>
@@ -46,7 +46,7 @@ export default function TokenElement({ stakingDetails }) {
             <Box
               sx={{
                 display: "grid",
-                gridTemplateColumns: "1fr 1fr 1fr",
+                gridTemplateColumns: "0.1fr 1fr 1fr",
                 gridAutoFlow: "row",
                 justifyContent: "space-around"
               }}
