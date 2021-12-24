@@ -17,10 +17,10 @@ function App() {
           SetDarkMode={setIsDarkModeEnabled}
         />
         <TokenElement stakingDetails = {{tokenName:"ETHEREUM",tokenSymbol:"ETH", 
-        APR:"4.0%", stakedAmount:1.0, rewardsAccumulated:400, currentCycleRewards:100 }}/>
+        APR:"4.0%", stakedAmount:1.0, rewardsAccumulated:400, rewardsWithdrawn:100 }}/>
 
         <TokenElement stakingDetails = {{tokenName:"RewardOne",tokenSymbol:"RONE", 
-        APR:"10.0%", stakedAmount:0, rewardsAccumulated:0, currentCycleRewards:0 }}/>
+        APR:"10.0%", stakedAmount:0, rewardsAccumulated:0, rewardsWithdrawn:0 }}/>
       </div>
     </ThemeProvider>
   );

@@ -65,7 +65,7 @@ export default function TokenElement({ stakingDetails }) {
                 {` Rewards Accumulated : ${stakingDetails.rewardsAccumulated} RONE`}
               </Typography>
               <Typography variant="body1" component="div" color="primary">
-                {` Current Cycle Rewards : ${stakingDetails.currentCycleRewards} RONE`}
+                {` Rewards Withdrawn : ${stakingDetails.rewardsWithdrawn} RONE`}
               </Typography>
               </div>
              
