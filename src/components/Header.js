@@ -11,6 +11,7 @@ export default function Header({ DarkMode, SetDarkMode }) {
   const [isConnectedWithWallet, setisConnectedWithWallet] = useState(false);
   const [walletAddress, setwalletAddress] = useState("");
   const [isMetaMask, setMetaMask] = useState(true);
+  const [changeNetwork, setChangeNetwork] = useState(false);
 
   useEffect(() => {
     //if wallet
@@ -23,6 +24,8 @@ export default function Header({ DarkMode, SetDarkMode }) {
     } else {
       setMetaMask(false);
     }
+    metamaskEvents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const changeMode = () => {
@@ -34,6 +37,15 @@ export default function Header({ DarkMode, SetDarkMode }) {
       SetDarkMode(true);
     }
   };
+
+  const metamaskEvents= ()=>{
+      window.ethereum.on('chainChanged', (chainId) => {
+        window.location.reload();
+      });
+      window.ethereum.on('accountsChanged', (accountID) => {
+      window.location.reload();
+    });
+  }
 
   const connectWallet = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
@@ -47,6 +59,11 @@ export default function Header({ DarkMode, SetDarkMode }) {
       setisConnectedWithWallet(true);
     }
     console.log("Account:", address);
+
+    let network = await provider.getNetwork();
+    if(network.chainId !== 4  && isMetaMask){
+        setChangeNetwork(true);
+    }
     setwalletAddress(address);
   };
 
@@ -126,6 +143,28 @@ export default function Header({ DarkMode, SetDarkMode }) {
                                <ListItem>
                                    <ListItemText>
                                    Select rinkeby network to stake and unstake on this app.
+                                   </ListItemText>
+                               </ListItem>
+                           </List>
+                       </CardContent>
+                       </Card>
+               </Paper>
+          
+           </Modal>
+       </Box>
+       <Box sx={{display:'flex', flexDirection:"row", justifyContent:'center', alignItems:'center'}}>
+        <Modal
+         open={changeNetwork}
+         aria-labelledby="modal-modal-title"
+         aria-describedby="modal-modal-description"
+       >
+               <Paper elevation={5} style={{ top:'50%', left:'50%' , position:'absolute',transform: 'translate(-50%,-50%)' , margin:'auto'}}>
+                   <Card>
+                       <CardContent>
+                           <List>
+                               <ListItem>
+                                   <ListItemText>
+                                   Wrong Network detected, Change the network to Rinkeby.
                                    </ListItemText>
                                </ListItem>
                            </List>
