@@ -5,6 +5,7 @@ export const stakingConstants= ()=>{
             minimumRoneToStake : 100,
             ethAPR: 15,
             roneAPR:4,
+            tokenFarmingAddress:"0x2e6c4dbc2a805154f92301e3E3B6Fc1eDaa0F1D4",
             tokenFarmingABI : {
                 "abi": [
                   {

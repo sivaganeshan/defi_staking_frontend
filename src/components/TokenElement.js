@@ -7,11 +7,40 @@ import {
   Box,
   Button,
 } from "@mui/material";
+import { useEffect, useState } from "react";
 import etherlogo from "../assest/ethereum.png";
 import inrslogo from "../assest/inrs.png";
+import {stakingConstants} from "../const";
+import {getEthStaked, getRoneStaked,getEthRewardsAccumulated,
+     getEthRewardsWithdrawn, getRoneRewardsAccumulated , getRoneRewardsWithdrawn, isEth} from "../contractHelper";
+
 
 export default function TokenElement({ stakingDetails }) {
-  return (
+
+    let constants = stakingConstants();
+    //const[isbusy, setIsBusy] = useState(true);
+    const[ethStaked, setEthStaked] = useState("");
+    const[roneStaked, setRoneStaked] = useState("");
+    const[ethRewardsAccumulated, setEthRewardsAccumulated] = useState("");
+    const[roneRewardsAccumulated, setroneRewardsAccumulated] = useState("");
+    const[ethRewardsWithdrawn, setethRewardsWithdrawn] = useState("");
+    const[roneRewardsWithdrawn, setRoneRewardsWithdraem] = useState("");
+
+    useEffect(()=>{
+        async function getStakingDetails(){
+            setEthStaked(await getEthStaked());
+            setRoneStaked(await getRoneStaked());
+            setEthRewardsAccumulated(await getEthRewardsAccumulated());
+            setroneRewardsAccumulated(await getRoneRewardsAccumulated());
+            setethRewardsWithdrawn(await getEthRewardsWithdrawn());
+            setRoneRewardsWithdraem(await getRoneRewardsWithdrawn());
+            
+        }
+         getStakingDetails();
+         // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
+
+  return (  
     <>
       <Paper elevation={5} style={{ marginTop: "1%"}}>
         <Card sx={{}}>
@@ -28,7 +57,7 @@ export default function TokenElement({ stakingDetails }) {
                 <Avatar component="span"
                   alt="logo"
                   src={
-                    stakingDetails.tokenSymbol === "ETH" ? etherlogo : inrslogo
+                    isEth(stakingDetails.tokenSymbol) ? etherlogo : inrslogo
                   }
                 ></Avatar>
               </div>
@@ -39,7 +68,7 @@ export default function TokenElement({ stakingDetails }) {
               </div>
               <div >
                 <Typography variant="h6" component="span" color="primary">
-                  {`APR : ${stakingDetails.APR}`}
+                 APR : {isEth(stakingDetails.tokenSymbol)?constants.ethAPR:constants.roneAPR} %
                 </Typography>
               </div>
             </Box>
@@ -56,16 +85,16 @@ export default function TokenElement({ stakingDetails }) {
                 </div>
                 <div>
                 <Typography variant="body1" component="div" color="primary">
-                {` Staked Amount : ${stakingDetails.stakedAmount} ${stakingDetails.tokenSymbol}`}
+                {` Staked Amount : ${isEth(stakingDetails.tokenSymbol)?ethStaked:roneStaked} ${stakingDetails.tokenSymbol}`}
               </Typography>
                 </div>
              
               <div>
               <Typography variant="body1" component="div" color="primary">
-                {` Rewards Accumulated : ${stakingDetails.rewardsAccumulated} RONE`}
+                {` Rewards Accumulated : ${isEth(stakingDetails.tokenSymbol)?ethRewardsAccumulated:roneRewardsAccumulated} RONE`}
               </Typography>
               <Typography variant="body1" component="div" color="primary">
-                {` Rewards Withdrawn : ${stakingDetails.rewardsWithdrawn} RONE`}
+                {` Rewards Withdrawn : ${isEth(stakingDetails.tokenSymbol)?ethRewardsWithdrawn:roneRewardsWithdrawn} RONE`}
               </Typography>
               </div>
              
@@ -85,12 +114,12 @@ export default function TokenElement({ stakingDetails }) {
                 Stake
               </Button>
 
-              <Button style={{gridColumnStart:'5'}} variant="outlined" disabled={stakingDetails.stakedAmount>0?false:true }>
+              <Button style={{gridColumnStart:'5'}} variant="outlined" disabled={ethStaked>0?false:true }>
                 {" "}
                 Unstake
               </Button>
 
-              <Button style={{gridColumnStart:'6'}} variant="outlined" disabled={(stakingDetails.currentCycleRewards + stakingDetails.rewardsAccumulated)>0?false:true }>
+              <Button style={{gridColumnStart:'6'}} variant="outlined" disabled={(ethRewardsAccumulated - ethRewardsWithdrawn)>0?false:true }>
                 {" "}
                 Collect Rewards
               </Button>
@@ -98,6 +127,6 @@ export default function TokenElement({ stakingDetails }) {
           </CardContent>
         </Card>
       </Paper>
-    </>
+      </>
   );
 }

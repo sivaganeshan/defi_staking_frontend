@@ -1,8 +1,18 @@
 import { Typography , Box, Paper, Card} from "@mui/material";
+import { useState, useEffect } from "react";
+import {getTotalEthLocked,getTotalRoneLocked} from "../contractHelper";
+export default function TotalValues(){
 
+    const[totalEthLocked, setTotalEthLocked] = useState(0.0);
+    const[totalRoneLocked, setTotalRoneLocked] = useState(0.0);
 
-export default function TotalValues({stakingDetails}){
-
+    useEffect(()=>{
+        const getLockedValues = async()=>{
+            setTotalEthLocked(await getTotalEthLocked());
+            setTotalRoneLocked(await getTotalRoneLocked());
+        }
+        getLockedValues();
+    },[]);
     return(
         <>
         <Paper elevation={5} >
@@ -17,7 +27,7 @@ export default function TotalValues({stakingDetails}){
                 Total ETH Locked
             </Typography>
             <Typography variant="h6" component="div" color="primary">
-                {stakingDetails.totalEthLocked}
+                {totalEthLocked}
             </Typography>
             </div>
             <div style={{gridColumnStart:'3'}} >
@@ -25,7 +35,7 @@ export default function TotalValues({stakingDetails}){
                     Total RONE Locked
                 </Typography>
                 <Typography variant="h6" component="div" color="primary">
-                    {stakingDetails.totalRoneLocked}
+                    {totalRoneLocked}
                 </Typography>
             </div>
         </Box>

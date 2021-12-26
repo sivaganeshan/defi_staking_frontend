@@ -4,27 +4,30 @@ import { useState, useEffect } from "react";
 import lightmode from "../assest/lightmode.svg";
 import darkmode from "../assest/darkmode.svg";
 import { setThemeLocalStorage } from "../themes";
-
-import { ethers } from "ethers";
+import {isRinkebyNetwork, getTokenFarmingContract, getSignerAddress } from "../contractHelper";
 
 export default function Header({ DarkMode, SetDarkMode }) {
-  const [isConnectedWithWallet, setisConnectedWithWallet] = useState(false);
+
   const [walletAddress, setwalletAddress] = useState("");
   const [isMetaMask, setMetaMask] = useState(true);
   const [changeNetwork, setChangeNetwork] = useState(false);
 
   useEffect(() => {
-    //if wallet
+   async function getWallerDetails(){
     if (window.ethereum) {
       setMetaMask(true);
-      connectWallet();
+      setwalletAddress(await getSignerAddress());
+      setChangeNetwork(! await isRinkebyNetwork());
     } else if (window.web3) {
       setMetaMask(true);
-      connectWallet();
+      setwalletAddress(await getSignerAddress());
+      setChangeNetwork(! await isRinkebyNetwork());
     } else {
       setMetaMask(false);
     }
     metamaskEvents();
+}
+getWallerDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -47,25 +50,11 @@ export default function Header({ DarkMode, SetDarkMode }) {
     });
   }
 
-  const connectWallet = async () => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-    // Prompt user for account connections
-    let accounts = await provider.send("eth_requestAccounts", []);
-    console.log("all adresses : ", accounts);
-    console.log("current address", ethers.Wallet.address);
-    const signer = provider.getSigner();
-    let address = await signer.getAddress();
-    if (address) {
-      setisConnectedWithWallet(true);
-    }
-    console.log("Account:", address);
+  const connectWallet = async ()=>{
+    await getTokenFarmingContract();
+  }
 
-    let network = await provider.getNetwork();
-    if(network.chainId !== 4  && isMetaMask){
-        setChangeNetwork(true);
-    }
-    setwalletAddress(address);
-  };
+  
 
   return (
     <>
@@ -74,7 +63,7 @@ export default function Header({ DarkMode, SetDarkMode }) {
             <Box
               sx={{
                 display: "grid",
-                gridTemplateColumns: "auto auto auto",
+                gridTemplateColumns: "2fr 10fr 1fr",
                 gridAutoFlow: "column",
                 justifyContent: "space-around",
                 alignContent: "center",
@@ -83,11 +72,11 @@ export default function Header({ DarkMode, SetDarkMode }) {
             >
               <div>
                 <Typography variant="h5" component="span" color="primary">
-                  Staking_Demo_Rinkeby
+                  Staking_Rinkeby
                 </Typography>
               </div>
               <div>
-                {!isConnectedWithWallet ? (
+                {!isMetaMask ? (
                   <Button
                     variant="outlined"
                     color="primary"
