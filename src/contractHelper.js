@@ -74,7 +74,6 @@ export const getTotalRoneLocked = async (contract)=>{
         let signer = await getSigner();
         let contract = await getTokenFarmingContract(signer);
         let totalRoneLocked = await contract.balanceOfRoneStaked();
-        console.log("rone staked : ",format(totalRoneLocked));
         return format(totalRoneLocked);
     }
     catch(ex){
@@ -161,4 +160,20 @@ export const isEth= (tokenSymbol)=>{
     catch(ex){
         console.error("Error in getting isEth : ", ex.message);
     }
+}
+
+export const isEthUnStakeDisabled = (ethstakedVal)=>{
+    return ethstakedVal<=0;
+}
+
+export const isRoneUnStakeDisabled  = (roneStakedVal)=>{
+    return roneStakedVal<=0;
+}
+
+export const isEthCollectRewardsDisabled  = (ethRewardsAccumulated,ethRewardsWithdrawn) =>{
+    return (ethRewardsAccumulated - ethRewardsWithdrawn)<=0;
+}
+
+export const isRoneCollectRewardsDisabled  = (roneRewardAccumulated, roneRewardsWithdrawn) =>{
+    return (roneRewardAccumulated-roneRewardsWithdrawn)<=0;
 }
