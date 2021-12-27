@@ -2,9 +2,9 @@ import { ethers } from "ethers";
 import {stakingConstants} from "./const";
 var constants = stakingConstants();
 
-// function tokens(n){
-//     return ethers.utils.parseEther(n);
-// }
+function tokens(n){
+    return ethers.utils.parseEther(n);
+}
 
 function format(n){
     return ethers.utils.formatEther(n);
@@ -54,6 +54,16 @@ export const getTokenFarmingContract= async (signer)=>{
     }
     catch(ex){
         console.error("Connection Error : ", ex.message);
+    }
+} 
+
+export const getRoneTokenContract= async (signer)=>{
+
+    try{
+        return new ethers.Contract(constants.ronetokenAddress,constants.ronetokenABI.abi,signer);
+    }
+    catch(ex){
+        console.error("Connection Error Rone Token: ", ex.message);
     }
 } 
 
@@ -152,6 +162,64 @@ export const getRoneRewardsWithdrawn = async ()=>{
     }
 }
 
+export const stakeEth = async (stakeVal)=>{
+    try{
+        let signer = await getSigner();
+        let contract = await getTokenFarmingContract(signer);
+        console.log("Eth Stake Value :" , tokens(stakeVal));
+        await contract.StakeEth({value : tokens(stakeVal)});
+        return true;
+    }
+    catch(ex){
+        console.error("Error in getting getRoneRewardsWithdrawn : ", ex.message);
+    }
+    return false;
+}
+
+export const stakeRone = async (stakeVal)=>{
+    try{
+        let signer = await getSigner();
+        let contract = await getTokenFarmingContract(signer);
+        let roneTokenContract = await getRoneTokenContract(signer);
+        await roneTokenContract.approve(constants.tokenFarmingAddress,tokens(stakeVal));
+        console.log("Rone Stake Value :" , tokens(stakeVal));
+        await contract.StakeRone(tokens(stakeVal));
+        return true;
+    }
+    catch(ex){
+        console.error("Error in getting getRoneRewardsWithdrawn : ", ex.message);
+    }
+    return false;
+}
+export const getEthBalance = async ()=>{
+    try{
+
+        const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+        const signer = provider.getSigner();
+        let adddress =  await signer.getAddress();
+        let ethBalance = await provider.getBalance(adddress);
+        return format(ethBalance);
+    }
+    catch(ex){
+        console.error("Error in getEthBalance method : ", ex.message);
+    }
+}
+
+export const getRoneBalance = async ()=>{
+    try{
+
+        let signer = await getSigner();
+        let contract = await getRoneTokenContract(signer);
+        let adddress =  await signer.getAddress();
+        let RoneTokenBalance = await contract.balanceOf(adddress);
+        return format(RoneTokenBalance);
+
+    }
+    catch(ex){
+        console.error("Error in getEthBalance method : ", ex.message);
+    }
+}
+
 export const isEth= (tokenSymbol)=>{
     try{
         
@@ -176,4 +244,15 @@ export const isEthCollectRewardsDisabled  = (ethRewardsAccumulated,ethRewardsWit
 
 export const isRoneCollectRewardsDisabled  = (roneRewardAccumulated, roneRewardsWithdrawn) =>{
     return (roneRewardAccumulated-roneRewardsWithdrawn)<=0;
+}
+
+export const getMaxStakeValue =(tokenSymbol,ethBalance, roneBalance)=>{
+    let maxStakeValue;
+    if(isEth(tokenSymbol)){
+        maxStakeValue = (parseFloat(ethBalance) -0.01);
+    }
+    else{
+        maxStakeValue = roneBalance;
+    }
+    return maxStakeValue;
 }
