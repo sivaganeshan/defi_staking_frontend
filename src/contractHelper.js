@@ -176,15 +176,44 @@ export const stakeEth = async (stakeVal)=>{
     return false;
 }
 
+export const unstakeEth = async ()=>{
+    try{
+        let signer = await getSigner();
+        let contract = await getTokenFarmingContract(signer);
+        await contract.unstakeEth();
+    }
+    catch(ex){
+        console.error("Error in getting unstakeEth : ", ex.message);
+    }
+    return false;
+}
+
+export const unstakeRone = async ()=>{
+    try{
+
+        let signer = await getSigner();
+        let contract = await getTokenFarmingContract(signer);
+        await contract.unStakeRone();
+        return true;
+    }
+    catch(ex){
+        console.error("Error in getting unstakeRone : ", ex.message);
+    }
+   
+}
 export const stakeRone = async (stakeVal)=>{
     try{
         let signer = await getSigner();
         let contract = await getTokenFarmingContract(signer);
         let roneTokenContract = await getRoneTokenContract(signer);
-        await roneTokenContract.approve(constants.tokenFarmingAddress,tokens(stakeVal));
-        console.log("Rone Stake Value :" , tokens(stakeVal));
-        await contract.StakeRone(tokens(stakeVal));
-        return true;
+         roneTokenContract.approve(constants.tokenFarmingAddress,tokens(stakeVal)).then(()=>{
+            console.log("Rone Stake Value :" , tokens(stakeVal));
+            contract.StakeRone(tokens(stakeVal)).then(()=>{
+                return true;
+            })
+         }
+         )
+       
     }
     catch(ex){
         console.error("Error in getting getRoneRewardsWithdrawn : ", ex.message);

@@ -34,7 +34,9 @@ import {
   getRoneBalance,
   getMaxStakeValue,
   stakeEth,
-  stakeRone
+  stakeRone,
+  unstakeEth,
+  unstakeRone
 } from "../contractHelper";
 import Loading from "./loading";
 
@@ -54,6 +56,7 @@ export default function TokenElement({ stakingDetails }) {
   const [textStakeValue, SetTextStakeValue] = useState("");
   const [stakeError,SetStakeError] = useState(false);
   const [isLoading, SetIsLoading] = useState(false);
+  const [isUnstakeClicked, SetisUnstakeClicked] = useState(false);
 
   useEffect(() => {
     async function getStakingDetails() {
@@ -100,6 +103,19 @@ export default function TokenElement({ stakingDetails }) {
 
   const handleTextChange=(event)=>{
     SetTextStakeValue(event.target.value);
+  }
+
+  const handleUnstakeClick = ()=>{
+    SetisUnstakeClicked(true);
+  }
+  const closeUnstake=()=>{
+    SetisUnstakeClicked(false);
+  }
+  const handleUnstakeConfirm = async()=>{
+    SetIsLoading(true);
+      isEth(stakingDetails.tokenSymbol)?await unstakeEth(): await unstakeRone();
+      SetIsLoading(false);
+      SetisUnstakeClicked(false);
   }
 
 
@@ -196,7 +212,7 @@ export default function TokenElement({ stakingDetails }) {
                     ? isEthUnStakeDisabled(ethStaked)
                     : isRoneUnStakeDisabled(roneStaked)
                 }
-                onClick={()=>stakeClicked()}
+                onClick={()=>handleUnstakeClick()}
               >
                 {" "}
                 Unstake
@@ -288,6 +304,62 @@ export default function TokenElement({ stakingDetails }) {
                 </ListItemText>
             </ListItem>
             }
+            </List>
+          </Card>
+        </Paper>
+      </Modal>
+      <Modal 
+      open={isUnstakeClicked}
+      onClose={closeUnstake}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+      >
+        <Paper
+          elevation={5}
+          style={{
+            top: "50%",
+            left: "50%",
+            position: "absolute",
+            transform: "translate(-50%,-50%)",
+            margin: "auto",
+          }}
+        >
+          <Card sx={{minWidth:"450px", minHeight:"350px"}}>
+            <List sx={{margin:"2%"}}>
+              <ListItem >
+                <ListItemText>
+                <Typography id="modal-modal-title" variant="h6" color="primary" component="h2">
+                    Unstake your tokens
+                </Typography>
+                </ListItemText>
+              </ListItem>
+              <ListItem >
+                <ListItemText>
+                <Typography id="modal-modal-title" variant="body2" color="primary" >
+                    Staked Balance : {isEth(stakingDetails.tokenSymbol)
+                    ?ethStaked:roneStaked} {stakingDetails.tokenSymbol}
+                </Typography>
+                </ListItemText>
+              </ListItem>
+              <ListItem sx={{marginTop:"5%"}}>
+                <ListItemText >
+                <Typography id="modal-modal-title" variant="body2" color="primary" >
+                    Do you want to unstake your holdings?
+                </Typography>
+                </ListItemText>
+            </ListItem>
+            <ListItem sx={{marginTop:"5%"}}>
+                <ListItemButton>
+                <Button variant="outlined" onClick={()=>handleUnstakeConfirm()}>
+                    Confirm
+                </Button>
+                </ListItemButton>
+                <ListItemButton>
+                <Button variant="outlined" onClick={()=>closeUnstake()}>
+                    Cancel
+                </Button>
+                </ListItemButton>
+            </ListItem>
             </List>
           </Card>
         </Paper>
