@@ -36,7 +36,9 @@ import {
   stakeEth,
   stakeRone,
   unstakeEth,
-  unstakeRone
+  unstakeRone,
+  collectEthAwards,
+  collectRoneAwards
 } from "../contractHelper";
 import Loading from "./loading";
 
@@ -57,6 +59,7 @@ export default function TokenElement({ stakingDetails }) {
   const [stakeError,SetStakeError] = useState(false);
   const [isLoading, SetIsLoading] = useState(false);
   const [isUnstakeClicked, SetisUnstakeClicked] = useState(false);
+  const [isCollectAwardClicked, SetIsCollectAwardClicked] = useState(false);
 
   useEffect(() => {
     async function getStakingDetails() {
@@ -116,6 +119,20 @@ export default function TokenElement({ stakingDetails }) {
       isEth(stakingDetails.tokenSymbol)?await unstakeEth(): await unstakeRone();
       SetIsLoading(false);
       SetisUnstakeClicked(false);
+  }
+
+  const collectAwarClick = ()=>{
+    SetIsCollectAwardClicked(true);
+  }
+  const closeCollectAward = ()=>{
+    SetIsCollectAwardClicked(false);
+  }
+
+  const handleCollectRewardsConfirm = async ()=>{
+    SetIsLoading(true);
+    isEth(stakingDetails.tokenSymbol)?await collectEthAwards(): await collectRoneAwards();
+    SetIsLoading(false);
+    closeCollectAward();
   }
 
 
@@ -232,6 +249,7 @@ export default function TokenElement({ stakingDetails }) {
                         roneRewardsWithdrawn
                       )
                 }
+                onClick={collectAwarClick}
               >
                 {" "}
                 Collect Rewards
@@ -356,6 +374,62 @@ export default function TokenElement({ stakingDetails }) {
                 </ListItemButton>
                 <ListItemButton>
                 <Button variant="outlined" onClick={()=>closeUnstake()}>
+                    Cancel
+                </Button>
+                </ListItemButton>
+            </ListItem>
+            </List>
+          </Card>
+        </Paper>
+      </Modal>
+      <Modal 
+      open={isCollectAwardClicked}
+      onClose={closeCollectAward}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+      >
+        <Paper
+          elevation={5}
+          style={{
+            top: "50%",
+            left: "50%",
+            position: "absolute",
+            transform: "translate(-50%,-50%)",
+            margin: "auto",
+          }}
+        >
+          <Card sx={{minWidth:"450px", minHeight:"350px"}}>
+            <List sx={{margin:"2%"}}>
+              <ListItem >
+                <ListItemText>
+                <Typography id="modal-modal-title" variant="h6" color="primary" component="h2">
+                    Collect your Awards
+                </Typography>
+                </ListItemText>
+              </ListItem>
+              <ListItem >
+                <ListItemText>
+                <Typography id="modal-modal-title" variant="body1" color="primary" >
+                    Awards Balance : {isEth(stakingDetails.tokenSymbol)
+                    ?(ethRewardsAccumulated- ethRewardsWithdrawn):(roneRewardsAccumulated - roneRewardsWithdrawn)} {stakingDetails.tokenSymbol}
+                </Typography>
+                </ListItemText>
+              </ListItem>
+              <ListItem sx={{marginTop:"5%"}}>
+                <ListItemText >
+                <Typography id="modal-modal-title" variant="body1" color="primary" >
+                    Do you want to collect all your rewards?
+                </Typography>
+                </ListItemText>
+            </ListItem>
+            <ListItem sx={{marginTop:"5%"}}>
+                <ListItemButton>
+                <Button variant="outlined" onClick={()=>handleCollectRewardsConfirm()}>
+                    Confirm
+                </Button>
+                </ListItemButton>
+                <ListItemButton>
+                <Button variant="outlined" onClick={()=>closeCollectAward()}>
                     Cancel
                 </Button>
                 </ListItemButton>

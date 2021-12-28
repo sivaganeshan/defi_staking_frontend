@@ -201,6 +201,32 @@ export const unstakeRone = async ()=>{
     }
    
 }
+
+export const collectRoneAwards = async ()=>{
+    try{
+
+        let signer = await getSigner();
+        let contract = await getTokenFarmingContract(signer);
+        await contract.collectRoneRewards();
+    }
+    catch(ex){
+        console.error("Error in getting collectRoneAwards : ", ex.message);
+    }
+   
+}
+
+export const collectEthAwards = async ()=>{
+    try{
+
+        let signer = await getSigner();
+        let contract = await getTokenFarmingContract(signer);
+        await contract.collectEthRewards();
+    }
+    catch(ex){
+        console.error("Error in getting collectEthAwards : ", ex.message);
+    }
+   
+}
 export const stakeRone = async (stakeVal)=>{
     try{
         let signer = await getSigner();
@@ -285,3 +311,4 @@ export const getMaxStakeValue =(tokenSymbol,ethBalance, roneBalance)=>{
     }
     return maxStakeValue;
 }
+
