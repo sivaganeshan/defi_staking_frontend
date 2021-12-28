@@ -335,7 +335,7 @@ export default function TokenElement({ stakingDetails }) {
               </ListItem>
               <ListItem >
                 <ListItemText>
-                <Typography id="modal-modal-title" variant="body2" color="primary" >
+                <Typography id="modal-modal-title" variant="body1" color="primary" >
                     Staked Balance : {isEth(stakingDetails.tokenSymbol)
                     ?ethStaked:roneStaked} {stakingDetails.tokenSymbol}
                 </Typography>
@@ -343,7 +343,7 @@ export default function TokenElement({ stakingDetails }) {
               </ListItem>
               <ListItem sx={{marginTop:"5%"}}>
                 <ListItemText >
-                <Typography id="modal-modal-title" variant="body2" color="primary" >
+                <Typography id="modal-modal-title" variant="body1" color="primary" >
                     Do you want to unstake your holdings?
                 </Typography>
                 </ListItemText>

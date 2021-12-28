@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import lightmode from "../assest/lightmode.svg";
 import darkmode from "../assest/darkmode.svg";
 import { setThemeLocalStorage } from "../themes";
-import {isRinkebyNetwork, getTokenFarmingContract, getSignerAddress } from "../contractHelper";
+import {isRinkebyNetwork, getSignerAddress } from "../contractHelper";
+import {ethers} from "ethers";
 
 export default function Header({ DarkMode, SetDarkMode }) {
 
@@ -51,7 +52,14 @@ getWallerDetails();
   }
 
   const connectWallet = async ()=>{
-    await getTokenFarmingContract();
+    const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+    // Prompt user for account connections
+    let accounts = await provider.send("eth_requestAccounts", []);
+    console.log("all adresses : ", accounts);
+    console.log("current address", ethers.Wallet.address);
+    const signer = provider.getSigner();
+    let address = await signer.getAddress();
+    setwalletAddress(address);
   }
 
   
@@ -76,7 +84,7 @@ getWallerDetails();
                 </Typography>
               </div>
               <div>
-                {!isMetaMask ? (
+                {!walletAddress ? (
                   <Button
                     variant="outlined"
                     color="primary"
