@@ -232,17 +232,36 @@ export const stakeRone = async (stakeVal)=>{
         let signer = await getSigner();
         let contract = await getTokenFarmingContract(signer);
         let roneTokenContract = await getRoneTokenContract(signer);
-         roneTokenContract.approve(constants.tokenFarmingAddress,tokens(stakeVal)).then(()=>{
-            console.log("Rone Stake Value :" , tokens(stakeVal));
+        //Allowance check logic
+        let SignerAddress = await signer.getAddress();
+        let signersAllowance = await roneTokenContract.allowance(SignerAddress,contract.address);
+        console.log("Signer and their allowance : ", SignerAddress, format(signersAllowance));
+
+        if(parseFloat(format(signersAllowance)) >= stakeVal){
+            console.log("Allowance exists as expected ");
             contract.StakeRone(tokens(stakeVal)).then(()=>{
                 return true;
             })
-         }
-         )
-       
+        }
+        else{
+            
+            if(parseFloat(format(signersAllowance)) === 0.0){
+                console.log("Allowance is empty approve gets called for stake value");
+                roneTokenContract.approve(constants.tokenFarmingAddress,tokens(stakeVal)).then(()=>{
+                    console.log("Rone Stake Value approved :" , tokens(stakeVal));
+                });
+            }
+            else{
+                let increaseApproval = parseFloat(stakeVal) - parseFloat(format(signersAllowance));
+                console.log("Rone Stake Value is getting increased :", increaseApproval);
+                 roneTokenContract.increaseAllowance(constants.tokenFarmingAddress, tokens(increaseApproval.toString())).then(()=>{
+                    console.log("Rone Stake Value increased to :" , tokens(increaseApproval.toString()));
+                 });
+            }
+        }
     }
     catch(ex){
-        console.error("Error in getting getRoneRewardsWithdrawn : ", ex.message);
+        console.error("Error in getting stakeRone : ", ex.message);
     }
     return false;
 }
