@@ -26,6 +26,6 @@ To get RONE ERC 20 token, ping https://twitter.com/rndmposter with the eth addre
 1. Rewards as per APY will be calculated and executed on smartcontract on every monday evening(Rewards will be distributed in RONE token).
 2. All the rewards will be transferred to your ETH account, post confirming collect rewards.
 
-ETH stake demo Video : https://www.dropbox.com/s/dk4ma5suxkub5ze/Get%20Started%20with%20Dropbox.pdf?dl=0
+ETH stake demo Video : https://www.dropbox.com/s/7c08lln0iwvsfie/ETH_stake_on%20personalsite.mov?dl=0
 
 RONE Stake demo video : https://www.dropbox.com/s/scoxf64tqotf886/Rone_stake_onpersonalsite.mov?dl=0
