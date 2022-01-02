@@ -1,4 +1,4 @@
-## Staking Demo _ Rinkeby network
+### Staking Dapp _ Rinkeby network
 
 #### How to run the code
 1. Checkout the code 
@@ -8,7 +8,7 @@
 
 Before running this application, Make sure you have installed MetaMask wallet as an extension in your favourite browser and configure rinkeby network (https://medium.com/@mail.bahurudeen/setup-a-metamask-ethereum-wallet-and-use-it-to-send-and-receive-ether-4f3b99360e4f).
 
-Also add some test ETH from rinkey faucet.(https://faucet.rinkeby.io/) 
+Also add some test ETH from rinkeby faucet.(https://faucet.rinkeby.io/) 
 
 To get RONE ERC 20 token, ping https://twitter.com/rndmposter with the eth address.
 
