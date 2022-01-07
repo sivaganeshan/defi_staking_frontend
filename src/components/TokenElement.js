@@ -185,7 +185,7 @@ export default function TokenElement({ stakingDetails }) {
               <div>
                 <Typography variant="body1" component="div" color="primary">
                   {` Staked Amount : ${
-                    isEth(stakingDetails.tokenSymbol) ? ethStaked : roneStaked
+                    isEth(stakingDetails.tokenSymbol) ? ethStaked?ethStaked:0.0 : roneStaked?roneStaked:0.0
                   } ${stakingDetails.tokenSymbol}`}
                 </Typography>
               </div>
@@ -194,15 +194,15 @@ export default function TokenElement({ stakingDetails }) {
                 <Typography variant="body1" component="div" color="primary">
                   {` Rewards Accumulated : ${
                     isEth(stakingDetails.tokenSymbol)
-                      ? ethRewardsAccumulated
-                      : roneRewardsAccumulated
+                      ? ethRewardsAccumulated?ethRewardsAccumulated:0.0
+                      : roneRewardsAccumulated?roneRewardsAccumulated:0.0
                   } RONE`}
                 </Typography>
                 <Typography variant="body1" component="div" color="primary">
                   {` Rewards Withdrawn : ${
                     isEth(stakingDetails.tokenSymbol)
-                      ? ethRewardsWithdrawn
-                      : roneRewardsWithdrawn
+                      ? ethRewardsWithdrawn?ethRewardsWithdrawn:0.0
+                      : roneRewardsWithdrawn?roneRewardsWithdrawn:0.0
                   } RONE`}
                 </Typography>
               </div>
